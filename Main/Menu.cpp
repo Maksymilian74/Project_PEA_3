@@ -1,8 +1,6 @@
 #include "Menu.h"
 #include "../Structures/Matrix.h"
-#include "../Structures/SymmetricMatrix.h"
 #include "../Utils/ReadFile.h"
-#include "../Utils/GenerateMatrix.h"
 #include "../Algorithms/Algorithms.h"
 #include <iostream>
 #include <fstream>
@@ -14,16 +12,17 @@ using namespace std::chrono;
 
 // Konstruktor odpowiedzialny za inicjalizacje domyslnych wartosci zmiennych
 Menu::Menu() {
-    generateData = false;
     inputFile = "";
-    symmetricProblem = 0;
-    instanceSize = 0;
     displayMatrix = false;
     iterations = 0;
-    algorithm = "";
+    runTS = 0;
+    runSA = 0;
     outputFile = "";
     progress = false;
     showResults = 0;
+    stop_criterion = 0;
+    neighborhoodSelection = "none";
+    temperatureFactor = 0;
     timer = 0;
 }
 
@@ -34,100 +33,54 @@ void Menu::run() {
     srand(time(nullptr));  // Inicjalizacja generatora liczb losowych
 
     Matrix* asymmetricMatrix = nullptr;  // Wskaznik do dynamicznie alokowanej macierzy asymetrycznej
-    SymmetricMatrix* symmetricMatrix = nullptr; // Wskaznik do dynamicznie alokowanej macierzy symetrycznej
 
-    if (!generateData) {
         ReadFile fileReader;
         int fileMatrixSize;
         try {
             // Wczytywanie rozmiaru macierzy z pliku
             fileMatrixSize = fileReader.getMatrixSize(inputFile);
-            if (symmetricProblem) {
-                symmetricMatrix = new SymmetricMatrix(fileMatrixSize);
-                fileReader.loadDataSymmetric(inputFile, *symmetricMatrix); // Wczytanie danych do macierzy symetrycznej
-            } else {
                 asymmetricMatrix = new Matrix(fileMatrixSize);
                 fileReader.loadDataAsymmetric(inputFile, *asymmetricMatrix); // Wczytanie danych do macierzy asymetrycznej
-            }
         } catch (const runtime_error& e) {
             cerr << e.what() << endl;
             return;
         }
-    }  else {
-        // Tworzenie macierzy na podstawie rozmiaru z konfiguracji
-        if (symmetricProblem) {
-            symmetricMatrix = new SymmetricMatrix(instanceSize);
-        } else {
-            asymmetricMatrix = new Matrix(instanceSize);
-        }
-    }
 
-    GenerateMatrix generator;  // Tworzenie obiektu generatora losowych danych
 
     Algorithms algorithms;  // Tworzenie obiektu klasy z algorytmami
 
     timer = 0;
     for (int i = 0; i < iterations; i++) {
 
-        // Wypelnienie macierzy losowymi danymi dla kazdej iteracji
-        if (generateData) {
-            if (symmetricProblem) {
-                generator.fillRandomSymmetricMatrix(*symmetricMatrix);
-            } else {
-                generator.fillRandomAsymmetricMatrix(*asymmetricMatrix);
-            }
-        }
-
         // Wyswietlanie macierzy
         if (displayMatrix) {
-            if (symmetricProblem) {
-                symmetricMatrix->display();
-            } else {
                 asymmetricMatrix->display();
-            }
         }
         vector<int> bestPath;
         int minCost = 0;
 
-        // Uruchomienie wybranego algorytmu
-        if (!symmetricProblem) { // Algorytmy dla problemu asymetrycznego
-            if (algorithm == "BranchAndBoundBFS") {
+        // Uruchomienie wybranych algorytmow
+        if (runTS) {
                 start = high_resolution_clock::now();
-                minCost = algorithms.AsymmetricBranchAndBoundBFS(*asymmetricMatrix, bestPath);
+                minCost = algorithms.AsymmetricTabuSearch(*asymmetricMatrix, bestPath);
                 stop = high_resolution_clock::now();
+            timer += duration_cast<duration<double, milli>>(stop - start).count();
+        }
 
-            } else if (algorithm == "BranchAndBoundDFS") {
+        if (runSA) {
                 start = high_resolution_clock::now();
-                minCost = algorithms.AsymmetricBranchAndBoundDFS(*asymmetricMatrix, bestPath);
+                minCost = algorithms.AsymmetricSimulatedAnnealing(*asymmetricMatrix, bestPath);
                 stop = high_resolution_clock::now();
+            timer += duration_cast<duration<double, milli>>(stop - start).count();
+        }
 
-            } else if (algorithm == "BranchAndBoundBestFirstSearch") {
-                start = high_resolution_clock::now();
-                minCost = algorithms.AsymmetricBranchAndBoundBestFirstSearch(*asymmetricMatrix, bestPath);
-                stop = high_resolution_clock::now();
-            } else {
-                cerr << "Blad: Nieznany algorytm dla problemu asymetrycznego!" << endl;
-                return;
-            }
-        } else { // Algorytmy dla problemu symetrycznego
-            if (algorithm == "BranchAndBoundBFS") {
-                start = high_resolution_clock::now();
-                minCost = algorithms.SymmetricBranchAndBoundBFS(*symmetricMatrix, bestPath);
-                stop = high_resolution_clock::now();
+        // Zapis pojedynczych wynikow do pliku CSV
+        if (runTS) {
+            saveResultsToCSV("TabuSearch",asymmetricMatrix->getSize(), duration_cast<duration<double, milli>>(stop - start).count());
+        }
 
-            } else if (algorithm == "BranchAndBoundDFS") {
-                start = high_resolution_clock::now();
-                minCost = algorithms.SymmetricBranchAndBoundDFS(*symmetricMatrix, bestPath);
-                stop = high_resolution_clock::now();
-
-            } else if (algorithm == "BranchAndBoundBestFirstSearch") {
-                start = high_resolution_clock::now();
-                minCost = algorithms.SymmetricBranchAndBoundBestFirstSearch(*symmetricMatrix, bestPath);
-                stop = high_resolution_clock::now();
-            } else {
-                cerr << "Blad: Nieznany algorytm dla problemu symetrycznego!" << endl;
-                return;
-            }
+        if (runSA) {
+            saveResultsToCSV("SimulatedAnnealing",asymmetricMatrix->getSize(), duration_cast<duration<double, milli>>(stop - start).count());
         }
 
         timer += duration_cast<duration<double, milli>>(stop - start).count();
@@ -150,25 +103,15 @@ void Menu::run() {
     }
 
     // Zapis wynikow do pliku CSV
-    if (symmetricProblem) {
-        saveResultsToCSV(algorithm + "_Symmetric", symmetricMatrix->getSize(), timer / iterations);
-    } else {
-        saveResultsToCSV(algorithm + "_Asymmetric", asymmetricMatrix->getSize(), timer / iterations);
+    if (runTS) {
+        saveResultsToCSV("TabuSearch",asymmetricMatrix->getSize(), timer / iterations);
     }
 
-    cout << endl << "Algorytm " << algorithm;
-
-    if (symmetricProblem) {
-        cout << " dla problemu symetrycznego";
-        cout << ", dla macierzy o rozmiarze: " << symmetricMatrix->getSize();
-    } else {
-        cout << " dla problemu asymetrycznego";
-        cout << ", dla macierzy o rozmiarze: " << asymmetricMatrix->getSize();
+    if (runSA) {
+        saveResultsToCSV("SimulatedAnnealing",asymmetricMatrix->getSize(), timer / iterations);
     }
-    cout << ", sredni czas: " << timer / iterations << " ms" << endl;
 
     delete asymmetricMatrix;
-    delete symmetricMatrix;
 }
 
 // Metoda odpowiedzialna za wczytywanie konfiguracji z pliku konfiguracyjnego
@@ -193,39 +136,37 @@ void Menu::loadConfig(const string& configFile) {
         // Przypisanie wartosci na podstawie numeru linii
         switch (lineCount) {
             case 0:
-                generateData = (value == "1");
-                break;
-            case 1:
                 inputFile = value;
                 break;
-            case 2:
-                if (!value.empty()) {
-                    symmetricProblem = (value == "1");
-                }
-                break;
-            case 3:
-                if (!value.empty()) {
-                    instanceSize = stoi(value);
-                }
-                break;
-            case 4:
+            case 1:
                 displayMatrix = (value == "1");
                 break;
-            case 5:
+            case 2:
                 iterations = stoi(value);
                 break;
+            case 3:
+                runTS = (value == "1");
                 break;
-            case 6:
-                algorithm = value;
+            case 4:
+                runSA = (value == "1");
                 break;
-            case 7:
+            case 5:
                 outputFile = value;
                 break;
-            case 8:
+            case 6:
                 progress = (value == "1");
                 break;
-            case 9:
+            case 7:
                 showResults = (value == "1");
+                break;
+            case 8:
+                stop_criterion = stoi(value);
+                break;
+            case 9:
+                neighborhoodSelection = value;
+                break;
+            case 10:
+                temperatureFactor = stoi(value);
                 break;
         }
         lineCount++;

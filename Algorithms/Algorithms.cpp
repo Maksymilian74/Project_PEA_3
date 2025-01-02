@@ -1,12 +1,13 @@
 #include "Algorithms.h"
-#include "../Structures/PriorityQueue.h"
-#include <limits>
-#include <iostream>
 
 using namespace std;
 
-// Metoda branch and bound BFS dla macierzy asymetrycznej
-int Algorithms::AsymmetricBranchAndBoundBFS(const Matrix &matrix, vector<int> &bestPath) {
+// Metoda Tabu Search dla macierzy asymetrycznej
+int Algorithms::AsymmetricTabuSearch(const Matrix &matrix, vector<int> &bestPath) {
 
 }
 
+// Metoda Simulated Annealing dla macierzy asymetrycznej
+int Algorithms::AsymmetricSimulatedAnnealing(const Matrix &matrix, vector<int> &bestPath) {
+
+}

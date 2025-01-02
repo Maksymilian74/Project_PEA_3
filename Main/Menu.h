@@ -20,16 +20,17 @@ public:
     void loadConfig(const string& configFile);  // Metoda odpowiedzialna za wczytanie danych z pliku konfiguracyjnego
 
 private:
-    bool generateData;   // Zmienna przechowujaca informacje czy generowac dane losowe
     string inputFile;  // Zmienna przechowujaca nazwe pliku wejsciowego
-    bool symmetricProblem; // Czy problem jest symetryczny
-    int instanceSize;  // Zmienna przechowujaca rozmiar instancji macierzy
     bool displayMatrix;   // Zmienna przechowujaca informacje czy wyswietlac macierz
     int iterations;  // Zmienna przechowujaca liczbe iteracji
-    string algorithm;  // Zmienna przechowujaca nazwe wybranego algorytmu do uruchomienia
+    bool runTS;  // Zmienna przechowujaca informacje czy wywolywac algorytm Tabu Search
+    bool runSA;  // Zmienna przechowujaca informacje czy wywolywac algorytm Simulated Annealing
     string outputFile;  // Zmienna przechowujaca nazwe pliku wyjsciowego
     bool progress;  // Zmienna przechowujaca informacje czy wyswietlac pasek postepu
     bool showResults;  // Zmienna przechowujaca informacje czy wyswietlac wyniki dzialania algorytmu
+    int stop_criterion; // Zmienna przechowujaca informacje o kryterium stopu
+    string neighborhoodSelection; // Zmienna przechowujaca informacje o wyborze sasiedztwa
+    double temperatureFactor; // Zmienna przechowujaca informacje o wspolczynniku zmiany temperatury
     high_resolution_clock::time_point start, stop;  // Zmienne do przechowywania punktow czasowych do mierzenia czasu wykonania
     double timer;  // Zmienna przechowujaca zmierzony czas wykonania algorytmu
 
