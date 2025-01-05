@@ -28,7 +28,7 @@ int ReadFile::getMatrixSize(const string& filename) {
 }
 
 // Metoda odpowiedzialna za wczytywanie danych z pliku
-void ReadFile::loadDataAsymmetric(const string& filename, Matrix& matrix) {
+void ReadFile::loadData(const string& filename, Matrix& matrix) {
     ifstream file(filename);  // Otwarcie pliku do odczytu
     if (!file.is_open()) {
         cerr << "Blad: Nie mozna otworzyc pliku: " << filename << endl;  // Wyswietlenie bledu, jesli pliku nie mozna otworzyc

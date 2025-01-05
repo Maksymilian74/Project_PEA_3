@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/szewc/CLionProjects/Projekt_PEA_3
+# Install script for directory: C:/Users/W10/CLionProjects/Projekt_PEA_3
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/szewc/CLionProjects/Projekt_PEA_3/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/W10/CLionProjects/Projekt_PEA_3/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

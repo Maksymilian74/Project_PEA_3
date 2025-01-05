@@ -9,7 +9,6 @@
 
 #include <string>
 #include "../Structures/Matrix.h"
-#include "../Structures/SymmetricMatrix.h"
 
 using namespace std;
 
@@ -18,11 +17,9 @@ public:
     // Metoda odpowiedzialna za wczytanie rozmiaru macierzy z pliku
     int getMatrixSize(const string& filename);
 
-    // Metoda odpowiedzialna za wczytywanie danych z pliku do macierzy asymetrzycznej
-    void loadDataAsymmetric(const string& filename, Matrix& matrix);
+    // Metoda odpowiedzialna za wczytywanie danych z pliku do macierzy
+    void loadData(const string& filename, Matrix& matrix);
 
-    // Metoda odpowiedzialna za wczytywanie danych z pliku do macierzy symetrzycznej
-    void loadDataSymmetric(const std::string& filename, SymmetricMatrix& matrix);
 };
 
 #endif

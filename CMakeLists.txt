@@ -11,8 +11,6 @@ add_executable(Projekt_PEA_3
         Main/Menu.h
         Structures/Matrix.cpp
         Structures/Matrix.h
-        Structures/SymmetricMatrix.cpp
-        Structures/SymmetricMatrix.h
         Utils/GenerateMatrix.cpp
         Utils/GenerateMatrix.h
         Utils/ReadFile.cpp

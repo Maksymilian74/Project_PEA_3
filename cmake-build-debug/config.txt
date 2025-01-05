@@ -1,24 +1,24 @@
 # Plik konfiguracyjny programu
 
-# Nazwa pliku wejsciowego
-input_file=ftv47.atsp
+# Nazwa pliku wejsciowego(ftv47.atsp, ftv170.atsp, rbg403.atsp)
+input_file=rbg403.atsp
 # Czy wyswietlic macierz (0 - nie, 1 - tak)
-display_matrix=1
+display_matrix=0
 # Liczba iteracji
-iterations=1
-# Uruchomienie algorytmu Tabu Search
-run_TS=0
+iterations=10
 # Uruchomienie algorytmu Simulated Annealing
-run_SA=0
+run_SA=1
 # Nazwa pliku wyjsciowego
 output_file=result.csv
 # Wlaczenie paska postepu (0 - nie, 1 - tak)
 progress=0
 # Wyswietlanie wynikow algorytmu (0 - nie, 1 - tak)
-show_results=1
+show_results=0
 # Kryterium stopu
-stop_criterion=10
-# Wybor sasiedztwa (swap, insert)
-neighborhood_selection=
+stop_criterion=10000
+# Wybor sasiedztwa (swap, invert, insert)
+neighborhood_selection=insert
+# Temperatura poczatkowa
+initial_temperature=1000
 # Wspolczynnik zmiany temperatury
-temperature_factor=0
+temperature_factor=0.99993

@@ -1,6 +1,6 @@
 /*
- * Klasa Algorithms odpowiedzialna jest za implementacje dwoch
- * algorytmow rozwiazywania problemu komiwojazera oraz metody pomocniczej
+ * Klasa Algorithms odpowiedzialna jest za implementacje
+ * algorytmu rozwiazywania problemu komiwojazera oraz metody pomocniczej
  *
  */
 
@@ -9,17 +9,25 @@
 
 #include "../Structures/Matrix.h"
 #include <vector>
+#include <random>
 
 using namespace std;
 
 class Algorithms {
 public:
-    // Metoda Tabu Search dla macierzy asymetrycznej
-    int AsymmetricTabuSearch(const Matrix& matrix, vector<int>& bestPath);
+    // Metoda Simulated Annealing
+    int SimulatedAnnealing(const Matrix& matrix, vector<int>& bestPath, double initialTemperature, const string& neighborhoodSelection, double temperatureFactor, int stop_criterion);
 
-    // Metoda Simulated Annealing dla macierzy asymetrycznej
-    int AsymmetricSimulatedAnnealing(const Matrix& matrix, vector<int>& bestPath);
+private:
+    // Metoda najbliższego sąsiada
+    std::vector<int> nearestNeighbor(const Matrix& matrix) const;
+
+    // Funkcja do obliczania kosztu ścieżki
+    int calculateCost(const Matrix& matrix, const std::vector<int>& path) const;
+
+    // Funkcja generowania sąsiada
+    std::vector<int> generateNeighbor(const std::vector<int>& path, const std::string& neighborhoodSelection, std::mt19937& rng) const;
+
 };
-
 
 #endif

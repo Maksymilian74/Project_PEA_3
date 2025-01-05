@@ -23,13 +23,13 @@ private:
     string inputFile;  // Zmienna przechowujaca nazwe pliku wejsciowego
     bool displayMatrix;   // Zmienna przechowujaca informacje czy wyswietlac macierz
     int iterations;  // Zmienna przechowujaca liczbe iteracji
-    bool runTS;  // Zmienna przechowujaca informacje czy wywolywac algorytm Tabu Search
     bool runSA;  // Zmienna przechowujaca informacje czy wywolywac algorytm Simulated Annealing
     string outputFile;  // Zmienna przechowujaca nazwe pliku wyjsciowego
     bool progress;  // Zmienna przechowujaca informacje czy wyswietlac pasek postepu
     bool showResults;  // Zmienna przechowujaca informacje czy wyswietlac wyniki dzialania algorytmu
     int stop_criterion; // Zmienna przechowujaca informacje o kryterium stopu
     string neighborhoodSelection; // Zmienna przechowujaca informacje o wyborze sasiedztwa
+    int initialTemperature; // Zmienna przechowujaca informacje o temperaturze poczatkowej
     double temperatureFactor; // Zmienna przechowujaca informacje o wspolczynniku zmiany temperatury
     high_resolution_clock::time_point start, stop;  // Zmienne do przechowywania punktow czasowych do mierzenia czasu wykonania
     double timer;  // Zmienna przechowujaca zmierzony czas wykonania algorytmu

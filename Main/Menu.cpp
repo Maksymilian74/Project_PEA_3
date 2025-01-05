@@ -15,13 +15,13 @@ Menu::Menu() {
     inputFile = "";
     displayMatrix = false;
     iterations = 0;
-    runTS = 0;
     runSA = 0;
     outputFile = "";
     progress = false;
     showResults = 0;
     stop_criterion = 0;
     neighborhoodSelection = "none";
+    initialTemperature = 0;
     temperatureFactor = 0;
     timer = 0;
 }
@@ -32,15 +32,15 @@ void Menu::run() {
 
     srand(time(nullptr));  // Inicjalizacja generatora liczb losowych
 
-    Matrix* asymmetricMatrix = nullptr;  // Wskaznik do dynamicznie alokowanej macierzy asymetrycznej
+    Matrix* matrix = nullptr;  // Wskaznik do dynamicznie alokowanej macierzy
 
         ReadFile fileReader;
         int fileMatrixSize;
         try {
             // Wczytywanie rozmiaru macierzy z pliku
             fileMatrixSize = fileReader.getMatrixSize(inputFile);
-                asymmetricMatrix = new Matrix(fileMatrixSize);
-                fileReader.loadDataAsymmetric(inputFile, *asymmetricMatrix); // Wczytanie danych do macierzy asymetrycznej
+                matrix = new Matrix(fileMatrixSize);
+                fileReader.loadData(inputFile, *matrix); // Wczytanie danych do macierzy
         } catch (const runtime_error& e) {
             cerr << e.what() << endl;
             return;
@@ -54,33 +54,22 @@ void Menu::run() {
 
         // Wyswietlanie macierzy
         if (displayMatrix) {
-                asymmetricMatrix->display();
+                matrix->display();
         }
         vector<int> bestPath;
         int minCost = 0;
 
-        // Uruchomienie wybranych algorytmow
-        if (runTS) {
-                start = high_resolution_clock::now();
-                minCost = algorithms.AsymmetricTabuSearch(*asymmetricMatrix, bestPath);
-                stop = high_resolution_clock::now();
-            timer += duration_cast<duration<double, milli>>(stop - start).count();
-        }
-
         if (runSA) {
                 start = high_resolution_clock::now();
-                minCost = algorithms.AsymmetricSimulatedAnnealing(*asymmetricMatrix, bestPath);
+                minCost = algorithms.SimulatedAnnealing(*matrix, bestPath, initialTemperature, neighborhoodSelection, temperatureFactor, stop_criterion);
+                cout << "koszt: " << minCost << endl;
                 stop = high_resolution_clock::now();
             timer += duration_cast<duration<double, milli>>(stop - start).count();
         }
 
         // Zapis pojedynczych wynikow do pliku CSV
-        if (runTS) {
-            saveResultsToCSV("TabuSearch",asymmetricMatrix->getSize(), duration_cast<duration<double, milli>>(stop - start).count());
-        }
-
         if (runSA) {
-            saveResultsToCSV("SimulatedAnnealing",asymmetricMatrix->getSize(), duration_cast<duration<double, milli>>(stop - start).count());
+            saveResultsToCSV("SimulatedAnnealing",matrix->getSize(), duration_cast<duration<double, milli>>(stop - start).count());
         }
 
         timer += duration_cast<duration<double, milli>>(stop - start).count();
@@ -103,15 +92,11 @@ void Menu::run() {
     }
 
     // Zapis wynikow do pliku CSV
-    if (runTS) {
-        saveResultsToCSV("TabuSearch",asymmetricMatrix->getSize(), timer / iterations);
-    }
-
     if (runSA) {
-        saveResultsToCSV("SimulatedAnnealing",asymmetricMatrix->getSize(), timer / iterations);
+        saveResultsToCSV("SimulatedAnnealing",matrix->getSize(), timer / iterations);
     }
 
-    delete asymmetricMatrix;
+    delete matrix;
 }
 
 // Metoda odpowiedzialna za wczytywanie konfiguracji z pliku konfiguracyjnego
@@ -145,28 +130,28 @@ void Menu::loadConfig(const string& configFile) {
                 iterations = stoi(value);
                 break;
             case 3:
-                runTS = (value == "1");
-                break;
-            case 4:
                 runSA = (value == "1");
                 break;
-            case 5:
+            case 4:
                 outputFile = value;
                 break;
-            case 6:
+            case 5:
                 progress = (value == "1");
                 break;
-            case 7:
+            case 6:
                 showResults = (value == "1");
                 break;
-            case 8:
+            case 7:
                 stop_criterion = stoi(value);
                 break;
-            case 9:
+            case 8:
                 neighborhoodSelection = value;
                 break;
+            case 9:
+                initialTemperature = stoi(value);
+                break;
             case 10:
-                temperatureFactor = stoi(value);
+                temperatureFactor = stod(value);
                 break;
         }
         lineCount++;
