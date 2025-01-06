@@ -60,19 +60,14 @@ void Menu::run() {
         int minCost = 0;
 
         if (runSA) {
-                start = high_resolution_clock::now();
                 minCost = algorithms.SimulatedAnnealing(*matrix, bestPath, initialTemperature, neighborhoodSelection, temperatureFactor, stop_criterion);
                 cout << "koszt: " << minCost << endl;
-                stop = high_resolution_clock::now();
-            timer += duration_cast<duration<double, milli>>(stop - start).count();
         }
 
         // Zapis pojedynczych wynikow do pliku CSV
         if (runSA) {
             saveResultsToCSV("SimulatedAnnealing",matrix->getSize(), duration_cast<duration<double, milli>>(stop - start).count());
         }
-
-        timer += duration_cast<duration<double, milli>>(stop - start).count();
 
         if (showResults) {
             // Wyswietlenie wynikow
