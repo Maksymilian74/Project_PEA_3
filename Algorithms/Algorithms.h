@@ -16,16 +16,16 @@ using namespace std;
 class Algorithms {
 public:
     // Metoda Simulated Annealing
-    int SimulatedAnnealing(const Matrix& matrix, vector<int>& bestPath, double initialTemperature, const string& neighborhoodSelection, double temperatureFactor, int stop_criterion);
+    int SimulatedAnnealing(const Matrix& matrix, vector<int>& bestPath, double initialTemperature, const string& neighborhoodSelection, double temperatureFactor, int stop_criterion, double& bestPathTime, double& bestPathTemperature);
 
 private:
-    // Metoda najbliższego sąsiada
+    // Metoda najblizszego sasiada
     std::vector<int> nearestNeighbor(const Matrix& matrix) const;
 
-    // Funkcja do obliczania kosztu ścieżki
+    // Funkcja do obliczania kosztu sciezki
     int calculateCost(const Matrix& matrix, const std::vector<int>& path) const;
 
-    // Funkcja generowania sąsiada
+    // Funkcja generowania sasiada
     std::vector<int> generateNeighbor(const std::vector<int>& path, const std::string& neighborhoodSelection, std::mt19937& rng) const;
 
 };

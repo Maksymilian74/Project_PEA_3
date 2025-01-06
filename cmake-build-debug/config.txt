@@ -1,7 +1,7 @@
 # Plik konfiguracyjny programu
 
 # Nazwa pliku wejsciowego(ftv47.atsp, ftv170.atsp, rbg403.atsp)
-input_file=rbg403.atsp
+input_file=ftv47.atsp
 # Czy wyswietlic macierz (0 - nie, 1 - tak)
 display_matrix=0
 # Liczba iteracji
@@ -15,7 +15,7 @@ progress=0
 # Wyswietlanie wynikow algorytmu (0 - nie, 1 - tak)
 show_results=0
 # Kryterium stopu
-stop_criterion=10000
+stop_criterion=1000
 # Wybor sasiedztwa (swap, invert, insert)
 neighborhood_selection=insert
 # Temperatura poczatkowa

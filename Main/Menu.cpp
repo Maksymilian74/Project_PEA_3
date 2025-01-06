@@ -34,18 +34,17 @@ void Menu::run() {
 
     Matrix* matrix = nullptr;  // Wskaznik do dynamicznie alokowanej macierzy
 
-        ReadFile fileReader;
-        int fileMatrixSize;
-        try {
-            // Wczytywanie rozmiaru macierzy z pliku
-            fileMatrixSize = fileReader.getMatrixSize(inputFile);
-                matrix = new Matrix(fileMatrixSize);
-                fileReader.loadData(inputFile, *matrix); // Wczytanie danych do macierzy
-        } catch (const runtime_error& e) {
-            cerr << e.what() << endl;
-            return;
-        }
-
+    ReadFile fileReader;
+    int fileMatrixSize;
+    try {
+        // Wczytywanie rozmiaru macierzy z pliku
+        fileMatrixSize = fileReader.getMatrixSize(inputFile);
+        matrix = new Matrix(fileMatrixSize);
+        fileReader.loadData(inputFile, *matrix); // Wczytanie danych do macierzy
+    } catch (const runtime_error& e) {
+        cerr << e.what() << endl;
+        return;
+    }
 
     Algorithms algorithms;  // Tworzenie obiektu klasy z algorytmami
 
@@ -54,24 +53,28 @@ void Menu::run() {
 
         // Wyswietlanie macierzy
         if (displayMatrix) {
-                matrix->display();
+            matrix->display();
         }
         vector<int> bestPath;
         int minCost = 0;
+        double bestPathTime = 0;
+        double bestPathTemperature = 0;
 
         if (runSA) {
-                minCost = algorithms.SimulatedAnnealing(*matrix, bestPath, initialTemperature, neighborhoodSelection, temperatureFactor, stop_criterion);
-                cout << "koszt: " << minCost << endl;
+            minCost = algorithms.SimulatedAnnealing(*matrix, bestPath, initialTemperature, neighborhoodSelection, temperatureFactor, stop_criterion, bestPathTime, bestPathTemperature);
+            cout << "Najlepszy znaleziony koszt: " << minCost << endl;
+            cout << "Czas znalezienia najlepszego wyniku: " << bestPathTime << " ms" << endl;
+            cout << "Temperatura dla najlepszego wyniku: " << bestPathTemperature << endl;
+
+            // Zapis pojedynczych wynikow do pliku CSV
+            saveResultsToCSV("SimulatedAnnealing",matrix->getSize(), minCost, bestPathTime, bestPathTemperature);
         }
 
-        // Zapis pojedynczych wynikow do pliku CSV
-        if (runSA) {
-            saveResultsToCSV("SimulatedAnnealing",matrix->getSize(), duration_cast<duration<double, milli>>(stop - start).count());
-        }
+
+
 
         if (showResults) {
             // Wyswietlenie wynikow
-            cout << "Minimalny koszt trasy: " << minCost << endl;
             cout << "Najlepsza trasa: ";
             for (int city: bestPath) {
                 cout << city << " ";
@@ -84,11 +87,6 @@ void Menu::run() {
             int progress = ((i + 1) * 100) / iterations;  // Obliczenie procenta ukonczenia symulacji
             cout << "Postep: " << progress << "%" << endl;
         }
-    }
-
-    // Zapis wynikow do pliku CSV
-    if (runSA) {
-        saveResultsToCSV("SimulatedAnnealing",matrix->getSize(), timer / iterations);
     }
 
     delete matrix;
@@ -164,14 +162,14 @@ string Menu::extractValue(const string& line) {
 }
 
 // Metoda odpowiedzialna za zapis wyników do pliku CSV
-void Menu::saveResultsToCSV(const string& algorithm, int size, double time) {
+void Menu::saveResultsToCSV(const string& algorithm, int size, int cost, double time, double temperature) {
     ofstream file(outputFile, ios::app);  // Otwieranie pliku w trybie dopisywania
     if (!file.is_open()) {
         cerr << "Blad: Nie mozna otworzyc pliku wyjsciowego: " << outputFile << endl;
         return;
     }
 
-    file << algorithm << "," << size << "," << time << "\n";
+    file << algorithm << "," << size << "," << cost << "," << time << "," << temperature << "\n";
 
     file.close();
 }

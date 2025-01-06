@@ -35,7 +35,7 @@ private:
     double timer;  // Zmienna przechowujaca zmierzony czas wykonania algorytmu
 
     string extractValue(const string& line); // Pomocnicza metoda do wyciagania wartosci po "="
-    void saveResultsToCSV(const string& algorithm, int size, double time);  // Pomocnicza metoda odpowiedzialna za zapis pomiarow do pliku
+    void saveResultsToCSV(const string& algorithm, int size, int cost, double time, double temperature);  // Pomocnicza metoda odpowiedzialna za zapis pomiarow do pliku
 };
 
 #endif
