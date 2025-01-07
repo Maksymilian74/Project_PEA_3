@@ -20,17 +20,15 @@ Menu::Menu() {
     progress = false;
     showResults = 0;
     stop_criterion = 0;
-    neighborhoodSelection = "none";
+    neighborhoodSelection = "swap";
     initialTemperature = 0;
     temperatureFactor = 0;
-    timer = 0;
+    coolingMethod = "geometric";
 }
 
 // Glowna metoda odpowiedzialna za wykonanie programu na podstawie wczytanej konfiguracji
 void Menu::run() {
     loadConfig("config.txt");  // Wczytanie konfiguracji z pliku config.txt
-
-    srand(time(nullptr));  // Inicjalizacja generatora liczb losowych
 
     Matrix* matrix = nullptr;  // Wskaznik do dynamicznie alokowanej macierzy
 
@@ -48,7 +46,6 @@ void Menu::run() {
 
     Algorithms algorithms;  // Tworzenie obiektu klasy z algorytmami
 
-    timer = 0;
     for (int i = 0; i < iterations; i++) {
 
         // Wyswietlanie macierzy
@@ -61,17 +58,14 @@ void Menu::run() {
         double bestPathTemperature = 0;
 
         if (runSA) {
-            minCost = algorithms.SimulatedAnnealing(*matrix, bestPath, initialTemperature, neighborhoodSelection, temperatureFactor, stop_criterion, bestPathTime, bestPathTemperature);
+            minCost = algorithms.SimulatedAnnealing(*matrix, bestPath, initialTemperature, neighborhoodSelection, temperatureFactor, stop_criterion, bestPathTime, bestPathTemperature, coolingMethod);
             cout << "Najlepszy znaleziony koszt: " << minCost << endl;
-            cout << "Czas znalezienia najlepszego wyniku: " << bestPathTime << " ms" << endl;
-            cout << "Temperatura dla najlepszego wyniku: " << bestPathTemperature << endl;
+            cout << fixed << setprecision(2) << "Czas znalezienia najlepszego wyniku: " << bestPathTime << " ms" << endl;
+            cout << fixed << setprecision(10) << "Temperatura dla najlepszego wyniku: " << bestPathTemperature << endl << endl;
 
             // Zapis pojedynczych wynikow do pliku CSV
             saveResultsToCSV("SimulatedAnnealing",matrix->getSize(), minCost, bestPathTime, bestPathTemperature);
         }
-
-
-
 
         if (showResults) {
             // Wyswietlenie wynikow
@@ -145,6 +139,9 @@ void Menu::loadConfig(const string& configFile) {
                 break;
             case 10:
                 temperatureFactor = stod(value);
+                break;
+            case 11:
+                coolingMethod = value;
                 break;
         }
         lineCount++;

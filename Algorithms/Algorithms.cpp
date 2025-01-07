@@ -8,7 +8,7 @@ using namespace std;
 using namespace std::chrono;
 
 // Metoda Simulated Annealing
-int Algorithms::SimulatedAnnealing(const Matrix& matrix, vector<int>& bestPath, double initialTemperature, const string& neighborhoodSelection, double temperatureFactor, int stop_criterion, double& bestPathTime, double& bestPathTemperature) {
+int Algorithms::SimulatedAnnealing(const Matrix& matrix, vector<int>& bestPath, double initialTemperature, const string& neighborhoodSelection, double temperatureFactor, int stop_criterion, double& bestPathTime, double& bestPathTemperature, const string& coolingMethod) {
     vector<int> currentPath = nearestNeighbor(matrix);
     bestPath = currentPath;
 
@@ -20,6 +20,7 @@ int Algorithms::SimulatedAnnealing(const Matrix& matrix, vector<int>& bestPath, 
     mt19937 rng(rd());
 
     double temperature = initialTemperature;
+    int counter = 0;
 
     auto startTime = high_resolution_clock::now();
 
@@ -38,6 +39,7 @@ int Algorithms::SimulatedAnnealing(const Matrix& matrix, vector<int>& bestPath, 
         if (deltaCost < 0) {
             currentPath = newPath;
             currentCost = newCost;
+            counter = 0;
 
             if (currentCost < bestCost) {
                 bestPath = currentPath;
@@ -51,10 +53,27 @@ int Algorithms::SimulatedAnnealing(const Matrix& matrix, vector<int>& bestPath, 
         else if (exp(-deltaCost / temperature) > uniform_real_distribution<>(0.0, 1.0)(rng)) {
             currentPath = newPath;
             currentCost = newCost;
+            counter = 0;
+        } else {
+            counter++;
+        }
+
+        if (counter > 100) {
+            for (int i = 0; i < 10; i++) {
+                currentPath = generateNeighbor(currentPath, "swap", rng);
+            }
+            currentCost = calculateCost(matrix, currentPath);
+            counter = 0;
         }
 
         // Schladzanie temperatury
-        temperature *= temperatureFactor;
+        if (coolingMethod == "geometric") {
+            temperature *= temperatureFactor;
+        } else if (coolingMethod == "logarithmic") {
+            temperature = temperature / (1 + 0,01 * log(1 + temperature));
+        } else {
+            throw invalid_argument("Unknown cooling method: " + coolingMethod);
+        }
     }
 
     return bestCost;

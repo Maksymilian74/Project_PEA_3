@@ -1,7 +1,7 @@
 /*
  * Klasa Menu odpowiedzialna jest za zarzadzanie glowna logika programu.
  * Odpowiada za wczytywanie konfiguracji z pliku, tworzenie macierzy,
- * wybieranie i uruchamianie odpowiedniego algorytmu oraz za mierzenie czasu
+ * wybieranie i uruchamianie odpowiedniego algorytmu
  */
 
 #ifndef PROJEKT_PEA_2_MENU_H
@@ -31,8 +31,7 @@ private:
     string neighborhoodSelection; // Zmienna przechowujaca informacje o wyborze sasiedztwa
     int initialTemperature; // Zmienna przechowujaca informacje o temperaturze poczatkowej
     double temperatureFactor; // Zmienna przechowujaca informacje o wspolczynniku zmiany temperatury
-    high_resolution_clock::time_point start, stop;  // Zmienne do przechowywania punktow czasowych do mierzenia czasu wykonania
-    double timer;  // Zmienna przechowujaca zmierzony czas wykonania algorytmu
+    string coolingMethod; // Zmienna przechowujaca informacje o sposobie chlodzenia
 
     string extractValue(const string& line); // Pomocnicza metoda do wyciagania wartosci po "="
     void saveResultsToCSV(const string& algorithm, int size, int cost, double time, double temperature);  // Pomocnicza metoda odpowiedzialna za zapis pomiarow do pliku

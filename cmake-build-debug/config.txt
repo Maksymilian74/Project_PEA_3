@@ -1,7 +1,7 @@
 # Plik konfiguracyjny programu
 
 # Nazwa pliku wejsciowego(ftv47.atsp, ftv170.atsp, rbg403.atsp)
-input_file=ftv47.atsp
+input_file=ftv170.atsp
 # Czy wyswietlic macierz (0 - nie, 1 - tak)
 display_matrix=0
 # Liczba iteracji
@@ -19,6 +19,8 @@ stop_criterion=1000
 # Wybor sasiedztwa (swap, invert, insert)
 neighborhood_selection=insert
 # Temperatura poczatkowa
-initial_temperature=1000
-# Wspolczynnik zmiany temperatury
-temperature_factor=0.99993
+initial_temperature=150
+# Wspolczynnik zmiany temperatury dla chlodzenia geometrycznego
+temperature_factor=0.95
+# Sposob chlodzenia (geometric, logarithmic)
+cooling_method=geometric

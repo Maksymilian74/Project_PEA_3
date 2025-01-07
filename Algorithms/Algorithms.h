@@ -1,6 +1,6 @@
 /*
  * Klasa Algorithms odpowiedzialna jest za implementacje
- * algorytmu rozwiazywania problemu komiwojazera oraz metody pomocniczej
+ * algorytmu rozwiazywania problemu komiwojazera oraz metod pomocniczych
  *
  */
 
@@ -16,7 +16,7 @@ using namespace std;
 class Algorithms {
 public:
     // Metoda Simulated Annealing
-    int SimulatedAnnealing(const Matrix& matrix, vector<int>& bestPath, double initialTemperature, const string& neighborhoodSelection, double temperatureFactor, int stop_criterion, double& bestPathTime, double& bestPathTemperature);
+    int SimulatedAnnealing(const Matrix& matrix, vector<int>& bestPath, double initialTemperature, const string& neighborhoodSelection, double temperatureFactor, int stop_criterion, double& bestPathTime, double& bestPathTemperature, const string& coolingMethod);
 
 private:
     // Metoda najblizszego sasiada
