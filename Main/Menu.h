@@ -34,7 +34,7 @@ private:
     string coolingMethod; // Zmienna przechowujaca informacje o sposobie chlodzenia
 
     string extractValue(const string& line); // Pomocnicza metoda do wyciagania wartosci po "="
-    void saveResultsToCSV(const string& algorithm, int size, int cost, double time, double temperature);  // Pomocnicza metoda odpowiedzialna za zapis pomiarow do pliku
+    void saveResultsToCSV(const string& algorithm, int size, int cost, double time, double finalTemperature);  // Pomocnicza metoda odpowiedzialna za zapis pomiarow do pliku
 };
 
 #endif

@@ -55,16 +55,16 @@ void Menu::run() {
         vector<int> bestPath;
         int minCost = 0;
         double bestPathTime = 0;
-        double bestPathTemperature = 0;
+        double finalTemperature = 0;
 
         if (runSA) {
-            minCost = algorithms.SimulatedAnnealing(*matrix, bestPath, initialTemperature, neighborhoodSelection, temperatureFactor, stop_criterion, bestPathTime, bestPathTemperature, coolingMethod);
+            minCost = algorithms.SimulatedAnnealing(*matrix, bestPath, initialTemperature, neighborhoodSelection, temperatureFactor, stop_criterion, bestPathTime, coolingMethod, finalTemperature);
             cout << "Najlepszy znaleziony koszt: " << minCost << endl;
-            cout << fixed << setprecision(2) << "Czas znalezienia najlepszego wyniku: " << bestPathTime << " ms" << endl;
-            cout << fixed << setprecision(10) << "Temperatura dla najlepszego wyniku: " << bestPathTemperature << endl << endl;
+            cout  << "Czas znalezienia najlepszego wyniku: " << bestPathTime << " ms" << endl;
+            cout  << "Temperatura koncowa: " << finalTemperature<< endl << endl;
 
             // Zapis pojedynczych wynikow do pliku CSV
-            saveResultsToCSV("SimulatedAnnealing",matrix->getSize(), minCost, bestPathTime, bestPathTemperature);
+            saveResultsToCSV("SimulatedAnnealing",matrix->getSize(), minCost, bestPathTime, finalTemperature);
         }
 
         if (showResults) {
@@ -159,14 +159,14 @@ string Menu::extractValue(const string& line) {
 }
 
 // Metoda odpowiedzialna za zapis wyników do pliku CSV
-void Menu::saveResultsToCSV(const string& algorithm, int size, int cost, double time, double temperature) {
+void Menu::saveResultsToCSV(const string& algorithm, int size, int cost, double time, double finalTemperature) {
     ofstream file(outputFile, ios::app);  // Otwieranie pliku w trybie dopisywania
     if (!file.is_open()) {
         cerr << "Blad: Nie mozna otworzyc pliku wyjsciowego: " << outputFile << endl;
         return;
     }
 
-    file << algorithm << "," << size << "," << cost << "," << time << "," << temperature << "\n";
+    file << algorithm << "," << size << "," << cost << "," << time << "," << finalTemperature << "\n";
 
     file.close();
 }

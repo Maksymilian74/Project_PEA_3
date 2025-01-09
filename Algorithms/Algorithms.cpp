@@ -8,7 +8,7 @@ using namespace std;
 using namespace std::chrono;
 
 // Metoda Simulated Annealing
-int Algorithms::SimulatedAnnealing(const Matrix& matrix, vector<int>& bestPath, double initialTemperature, const string& neighborhoodSelection, double temperatureFactor, int stop_criterion, double& bestPathTime, double& bestPathTemperature, const string& coolingMethod) {
+int Algorithms::SimulatedAnnealing(const Matrix& matrix, vector<int>& bestPath, double initialTemperature, const string& neighborhoodSelection, double temperatureFactor, int stop_criterion, double& bestPathTime, const string& coolingMethod, double& finalTemperature) {
     vector<int> currentPath = nearestNeighbor(matrix);
     bestPath = currentPath;
 
@@ -45,10 +45,8 @@ int Algorithms::SimulatedAnnealing(const Matrix& matrix, vector<int>& bestPath, 
                 bestPath = currentPath;
                 bestCost = currentCost;
                 bestPathTime = elapsedSeconds;
-                bestPathTemperature = temperature;
             }
         }
-
         // Sprawdzenie, czy akceptujemy gorsze rozwiazanie zgodnie z prawdopodobienstwem
         else if (exp(-deltaCost / temperature) > uniform_real_distribution<>(0.0, 1.0)(rng)) {
             currentPath = newPath;
@@ -58,7 +56,7 @@ int Algorithms::SimulatedAnnealing(const Matrix& matrix, vector<int>& bestPath, 
             counter++;
         }
 
-        if (counter > 100) {
+        if (counter > 1000) {
             for (int i = 0; i < 10; i++) {
                 currentPath = generateNeighbor(currentPath, "swap", rng);
             }
@@ -70,11 +68,13 @@ int Algorithms::SimulatedAnnealing(const Matrix& matrix, vector<int>& bestPath, 
         if (coolingMethod == "geometric") {
             temperature *= temperatureFactor;
         } else if (coolingMethod == "logarithmic") {
-            temperature = temperature / (1 + 0,01 * log(1 + temperature));
+            temperature = temperature / (1 + 0,001 * log(1 + temperature));
         } else {
             throw invalid_argument("Unknown cooling method: " + coolingMethod);
         }
     }
+
+    finalTemperature = temperature;
 
     return bestCost;
 }

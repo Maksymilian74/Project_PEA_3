@@ -5,7 +5,7 @@ input_file=ftv170.atsp
 # Czy wyswietlic macierz (0 - nie, 1 - tak)
 display_matrix=0
 # Liczba iteracji
-iterations=10
+iterations=2
 # Uruchomienie algorytmu Simulated Annealing
 run_SA=1
 # Nazwa pliku wyjsciowego
@@ -17,10 +17,10 @@ show_results=0
 # Kryterium stopu
 stop_criterion=1000
 # Wybor sasiedztwa (swap, invert, insert)
-neighborhood_selection=insert
+neighborhood_selection=swap
 # Temperatura poczatkowa
-initial_temperature=150
+initial_temperature=10000000
 # Wspolczynnik zmiany temperatury dla chlodzenia geometrycznego
-temperature_factor=0.95
+temperature_factor=0.9999
 # Sposob chlodzenia (geometric, logarithmic)
 cooling_method=geometric

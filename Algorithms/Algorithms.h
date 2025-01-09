@@ -16,7 +16,7 @@ using namespace std;
 class Algorithms {
 public:
     // Metoda Simulated Annealing
-    int SimulatedAnnealing(const Matrix& matrix, vector<int>& bestPath, double initialTemperature, const string& neighborhoodSelection, double temperatureFactor, int stop_criterion, double& bestPathTime, double& bestPathTemperature, const string& coolingMethod);
+    int SimulatedAnnealing(const Matrix& matrix, vector<int>& bestPath, double initialTemperature, const string& neighborhoodSelection, double temperatureFactor, int stop_criterion, double& bestPathTime, const string& coolingMethod, double& finalTemperatur);
 
 private:
     // Metoda najblizszego sasiada
