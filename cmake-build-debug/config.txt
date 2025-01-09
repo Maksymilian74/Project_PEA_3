@@ -1,11 +1,11 @@
 # Plik konfiguracyjny programu
 
 # Nazwa pliku wejsciowego(ftv47.atsp, ftv170.atsp, rbg403.atsp)
-input_file=ftv170.atsp
+input_file=ftv47.atsp
 # Czy wyswietlic macierz (0 - nie, 1 - tak)
 display_matrix=0
 # Liczba iteracji
-iterations=2
+iterations=10
 # Uruchomienie algorytmu Simulated Annealing
 run_SA=1
 # Nazwa pliku wyjsciowego
@@ -19,8 +19,8 @@ stop_criterion=1000
 # Wybor sasiedztwa (swap, invert, insert)
 neighborhood_selection=swap
 # Temperatura poczatkowa
-initial_temperature=10000000
+initial_temperature=1000
 # Wspolczynnik zmiany temperatury dla chlodzenia geometrycznego
-temperature_factor=0.9999
+temperature_factor=0.99
 # Sposob chlodzenia (geometric, logarithmic)
 cooling_method=geometric

@@ -68,7 +68,7 @@ int Algorithms::SimulatedAnnealing(const Matrix& matrix, vector<int>& bestPath, 
         if (coolingMethod == "geometric") {
             temperature *= temperatureFactor;
         } else if (coolingMethod == "logarithmic") {
-            temperature = temperature / (1 + 0,001 * log(1 + temperature));
+            temperature = temperature / (1 + 0,01 * log(1 + temperature));
         } else {
             throw invalid_argument("Unknown cooling method: " + coolingMethod);
         }
